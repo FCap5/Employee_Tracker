@@ -1,6 +1,7 @@
 const mysql = require("mysql");
 const connection = require("./connection.js");
 const inquirer = require("inquirer");
+const cTable = require("console.table");
 
 class Store {
   //add department to list
@@ -46,26 +47,7 @@ class Store {
     console.log(`${firstName} ${lastName} has been added to your company.`);
   }
   //add employee to list
-  viewRolesDB(response) {
-    console.log(response);
-    /* const array = [];
-    connection.query(
-      "SELECT title FROM roles WHERE department department_id =?",
-      [response.id],
-      (err, values) => {
-        if (err) throw err;
-        values.forEach((value) => {
-          array.push(value.name);
-        });
-        inquirer.prompt({
-          type: "list",
-          name: "departSelect",
-          choices: array,
-        });
-      }
-    ); */
-  }
-  //view departments
+
   viewDepartmentsDB() {
     const array = [];
     connection.query("SELECT name FROM departments", (err, values) => {
@@ -80,16 +62,54 @@ class Store {
           choices: array,
         })
         .then((response) => {
-          console.log(response.departSelect);
+          //console.log(response.departSelect);
+          this.viewRolesFromDepartmentDB(response.departSelect);
         });
     });
   }
+  //TODO view employees
+  viewEmployeesDB() {}
 
-  //view roles
+  addNewRole() {
+    inquirer.prompt(addRole).then((response) => {
+      const departmentArray = [];
+      connection.query("SELECT name FROM departments", (err, data) => {
+        if (err) {
+          console.log("this didn't work");
+          throw err;
+        }
+        data.forEach((datus) => {
+          departmentArray.push(datus.name);
+        });
+        console.log(departmentArray);
+        const roleSelect = [
+          {
+            type: "list",
+            name: "departmentId",
+            message: "What is the department for this new role?",
+            choices: departmentArray,
+          },
+        ];
+        inquirer.prompt(roleSelect).then((response2) => {
+          connection.query(
+            "SELECT id FROM departments WHERE name =?",
+            [response2.departmentId],
+            (err, data) => {
+              if (err) throw err;
+              store.addRoleDB(response.title, response.salary, data[0].id);
+              inquirer.prompt(addRoleFollowUp).then((response) => {
+                if (response.addRoleFollowUp == true) {
+                  addNewEmployee();
+                } else {
+                  postMenuSelect();
+                }
+              });
+            }
+          );
+        });
+      });
+    });
+  }
 }
-
-//view employees
-
-//update employee roles
 
 module.exports = new Store();
