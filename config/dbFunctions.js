@@ -5,6 +5,7 @@ const cTable = require("console.table");
 
 class Store {
   //add department to list
+
   addDepartmentDB(value) {
     connection.query(
       "INSERT INTO departments (name) VALUES  (?)",

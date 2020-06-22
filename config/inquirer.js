@@ -55,15 +55,7 @@ const runProgram = () => {
       message: "Would you like to add a role to this department?",
     },
   ];
-  /*   const roleList = () => {
-    connection.query("SELECT name FROM departments", (err, data) => {
-      if (err) {
-        console.log("this didn't work");
-        throw err;
-      }
-      return data.name;
-    });
-  }; */
+
   const addRole = [
     {
       type: "input",
@@ -95,18 +87,6 @@ const runProgram = () => {
       type: "input",
       name: "lastName",
       message: "What is the last name of the new employee?",
-    },
-    {
-      //TODO update to list to display roles
-      type: "number",
-      name: "roleId",
-      message: "What is the role ID for this new employee?",
-    },
-    {
-      //TODO update to list to display managers
-      type: "number",
-      name: "managerId",
-      message: "What is the ID of the manager this new employee?",
     },
   ];
 
@@ -144,7 +124,6 @@ const runProgram = () => {
         data.forEach((datus) => {
           departmentArray.push(datus.name);
         });
-        console.log(departmentArray);
         const roleSelect = [
           {
             type: "list",
@@ -176,13 +155,60 @@ const runProgram = () => {
 
   const addNewEmployee = () => {
     inquirer.prompt(addEmployee).then((response) => {
-      store.addEmployeeDB(
-        response.firstName,
-        response.lastName,
-        response.roleId,
-        response.managerId
-      );
-      postMenuSelect();
+      //get list of roles
+      const rolesList = [];
+      connection.query("SELECT title FROM roles", (err, roles) => {
+        if (err) throw err;
+        roles.forEach((role) => {
+          rolesList.push(role.title);
+        });
+        const rolesInquire = [
+          {
+            type: "list",
+            name: "selectRole",
+            message: "What is their role?",
+            choices: rolesList,
+          },
+        ];
+        inquirer.prompt(rolesInquire).then((roleID) => {
+          connection.query(
+            "SELECT role_id FROM roles WHERE title =?",
+            [roleID.selectRole],
+            (err, newRoleId) => {
+              if (err) throw err;
+              connection.query(
+                "SELECT id, first_name, last_name FROM employees",
+                (err, employees) => {
+                  if (err) throw err;
+                  const fullNames = [];
+                  employees.forEach((employee) => {
+                    const employeeName = `${employee.id}, ${employee.last_name}, ${employee.first_name}`;
+
+                    fullNames.push(employeeName);
+                  });
+                  const managers = [
+                    {
+                      type: "list",
+                      name: "selectManager",
+                      message: "Select new employee's manager",
+                      choices: fullNames,
+                    },
+                  ];
+                  inquirer.prompt(managers).then((managerName) => {
+                    store.addEmployeeDB(
+                      response.firstName,
+                      response.lastName,
+                      newRoleId[0].role_id,
+                      managerName.selectManager[0]
+                    );
+                    postMenuSelect();
+                  });
+                }
+              );
+            }
+          );
+        });
+      });
     });
   };
 
@@ -208,17 +234,17 @@ const runProgram = () => {
       //if view roles
       else if (response.menu === "view roles") {
         //view roles
-        postMenuSelect();
+        // postMenuSelect();
       }
       //if view employees
       else if (response.menu === "view employees") {
         //viewEmployees
-        postMenuSelect();
+        // postMenuSelect();
       }
       //if update employee roles
       else if (response.menu === "update employee rolls") {
         //update employee roles
-        postMenuSelect();
+        // postMenuSelect();
       }
     });
   };
