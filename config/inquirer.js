@@ -1,7 +1,15 @@
 const inquirer = require("inquirer");
 const express = require("express");
+const store = require("./dbFunctions.js");
+const mysql = require("mysql");
+const connection = require("./connection.js");
 
 const app = express();
+
+const employeeList = [];
+const managerList = [];
+const departmentList = [];
+const roleList = [];
 
 const runProgram = () => {
   const mainMenuSelect = [
@@ -107,9 +115,7 @@ const runProgram = () => {
 
   const addNewDepartment = () => {
     inquirer.prompt(addDepartment).then((response) => {
-      //code to add response to list
-      console.log(response.newDept);
-
+      store.addDepartmentDB(response.newDept);
       inquirer.prompt(addDeptFollowUp).then((response) => {
         if (response.deptFollowUp == true) {
           addNewRole();
@@ -123,8 +129,7 @@ const runProgram = () => {
   const addNewRole = () => {
     inquirer.prompt(addRole).then((response) => {
       //code to add response to db
-      console.log([response.title, response.salary, response.departmentId]);
-
+      store.addRoleDB(response.title, response.salary, response.departmentId);
       inquirer.prompt(addRoleFollowUp).then((response) => {
         if (response.addRoleFollowUp == true) {
           addNewEmployee();
@@ -137,7 +142,12 @@ const runProgram = () => {
 
   const addNewEmployee = () => {
     inquirer.prompt(addEmployee).then((response) => {
-      //code to add response to db
+      store.addEmployeeDB(
+        response.firstName,
+        response.lastName,
+        response.roleId,
+        response.managerId
+      );
       postMenuSelect();
     });
   };
@@ -154,11 +164,11 @@ const runProgram = () => {
       }
       //if add employee
       else if (response.menu === "add employee") {
-        console.log("add employee");
+        addNewEmployee();
       }
       //if view departments
       else if (response.menu === "view departments") {
-        addNewEmployee();
+        store.viewDepartmentsDB();
       }
       //if view roles
       else if (response.menu === "view roles") {
