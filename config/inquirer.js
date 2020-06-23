@@ -131,7 +131,7 @@ const runProgram = () => {
               if (err) throw err;
               store.addRoleDB(response.title, response.salary, data[0].id);
               inquirer.prompt(addRoleFollowUp).then((response) => {
-                if (response.addRoleFollowUp == true) {
+                if (response.roleFollowUp == true) {
                   addNewEmployee();
                 } else {
                   postMenuSelect();

@@ -56,6 +56,8 @@ I'm still struggling to grasp ASYNC functions, callbacks, and promises. I unders
 
 I also need to figure out how to clean up the issue I had with my Class. If I'm going to use a Class, I'd like to get all relevant functions into that class.
 
+This homework didn't ask for data validation. If I had more time, I probably would add datavalidation for the inquirer resonses to ensure that there were no blanks, integers when required, strings when required, and that there were no duplicate answers provided.
+
 ## THE APP:
 
 [![Click Through of App](assets/videoImg.png)](https://youtu.be/pqUVb0H23CY)
