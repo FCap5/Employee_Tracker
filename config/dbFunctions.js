@@ -72,8 +72,6 @@ class Store {
                 [data[0].id],
                 (err, data) => {
                   if (err) throw err;
-                  console.log(data.length);
-                  const blankSearchQuery = "";
                   const searchQuery = ["id = (?)"];
                   const queryString = "OR id = (?)";
                   const searchParameters = [];

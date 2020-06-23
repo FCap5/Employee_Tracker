@@ -6,13 +6,6 @@ const connection = require("./connection.js");
 
 const app = express();
 
-const employeeList = [];
-const managerList = [];
-const departmentList = [];
-const roleList = [];
-
-//TODO fix initial inquirer situation
-
 const runProgram = () => {
   const mainMenuSelect = [
     {
@@ -211,7 +204,6 @@ const runProgram = () => {
   };
 
   const mainMenu = () => {
-    //TODO display new employee rolls at top
     inquirer.prompt(mainMenuSelect).then((response) => {
       //if add department
       if (response.menu === "Add Department") {
@@ -228,15 +220,17 @@ const runProgram = () => {
       //if view departments
       else if (response.menu === "View Employees by Department") {
         store.viewDepartmentsDB();
+        setTimeout(mainMenu, 3000);
       }
-
       //if view roles
       else if (response.menu === "View Employees by Role") {
         store.viewRolesDB();
+        setTimeout(mainMenu, 3000);
       }
       //if view employees
       else if (response.menu === "View All Employees") {
         store.viewEmployeesDB();
+        setTimeout(mainMenu, 3000);
       }
     });
   };
