@@ -5,7 +5,6 @@ const cTable = require("console.table");
 
 class Store {
   //add department to list
-
   addDepartmentDB(value) {
     connection.query(
       "INSERT INTO departments (name) VALUES  (?)",
@@ -47,7 +46,6 @@ class Store {
     );
     console.log(`${firstName} ${lastName} has been added to your company.`);
   }
-  //add employee to list
 
   viewDepartmentsDB() {
     const array = [];
@@ -63,53 +61,97 @@ class Store {
           choices: array,
         })
         .then((response) => {
-          //console.log(response.departSelect);
-          this.viewRolesFromDepartmentDB(response.departSelect);
-        });
-    });
-  }
-  //TODO view employees
-  viewEmployeesDB() {}
-
-  addNewRole() {
-    inquirer.prompt(addRole).then((response) => {
-      const departmentArray = [];
-      connection.query("SELECT name FROM departments", (err, data) => {
-        if (err) {
-          console.log("this didn't work");
-          throw err;
-        }
-        data.forEach((datus) => {
-          departmentArray.push(datus.name);
-        });
-        console.log(departmentArray);
-        const roleSelect = [
-          {
-            type: "list",
-            name: "departmentId",
-            message: "What is the department for this new role?",
-            choices: departmentArray,
-          },
-        ];
-        inquirer.prompt(roleSelect).then((response2) => {
           connection.query(
             "SELECT id FROM departments WHERE name =?",
-            [response2.departmentId],
+            [response.departSelect],
             (err, data) => {
               if (err) throw err;
-              store.addRoleDB(response.title, response.salary, data[0].id);
-              inquirer.prompt(addRoleFollowUp).then((response) => {
-                if (response.addRoleFollowUp == true) {
-                  addNewEmployee();
-                } else {
-                  postMenuSelect();
+
+              connection.query(
+                "SELECT role_id FROM roles WHERE department_id =?",
+                [data[0].id],
+                (err, data) => {
+                  if (err) throw err;
+                  console.log(data.length);
+                  const blankSearchQuery = "";
+                  const searchQuery = ["id = (?)"];
+                  const queryString = "OR id = (?)";
+                  const searchParameters = [];
+
+                  data.forEach((datus) => {
+                    const i = data.indexOf(datus);
+                    searchParameters.push([data[i].role_id]);
+                    if (i > 0) {
+                      searchQuery.push(queryString);
+                    }
+                  });
+                  //https://stackoverflow.com/questions/10610402/javascript-replace-all-commas-in-a-string
+                  const revisedSearchQuery = searchQuery
+                    .join(",")
+                    .replace(/,/g, " ");
+                  connection.query(
+                    `SELECT first_name, last_name, id FROM employees WHERE ${revisedSearchQuery}`,
+                    searchParameters,
+                    (err, employees) => {
+                      if (err) throw err;
+                      console.table(employees);
+                    }
+                  );
                 }
-              });
+              );
+              //
             }
           );
         });
+    });
+  }
+
+  viewRolesDB() {
+    connection.query("SELECT title FROM roles", (err, roles) => {
+      if (err) throw err;
+      const allRoles = [];
+      roles.forEach((role) => {
+        allRoles.push(role.title);
+      });
+      const selectRole = [
+        {
+          type: "list",
+          name: "selectRole",
+          message: "Select which roles's employees you'd like to view",
+          choices: allRoles,
+        },
+      ];
+      inquirer.prompt(selectRole).then((response) => {
+        console.log(response.selectRole);
+        connection.query(
+          "SELECT role_id FROM roles WHERE title = ?",
+          [response.selectRole],
+          (err, roleID) => {
+            if (err) throw err;
+            console.log(roleID[0].role_id);
+            connection.query(
+              "SELECT first_name, last_name FROM employees WHERE role_id = ?",
+              [roleID[0].role_id],
+              (err, employeesByRole) => {
+                if (err) throw err;
+                const employeeName = [];
+                employeesByRole.forEach((employee) => {
+                  employeeName.push([
+                    `${employee.first_name}`,
+                    `${employee.last_name}`,
+                  ]);
+                });
+                console.table(["First Name", "Last Name"], employeeName);
+              }
+            );
+          }
+        );
       });
     });
+  }
+  //TODO view employees
+  viewEmployeesDB() {
+    connection.query("SELECT first_name, last_name FROM ");
   }
 }
 

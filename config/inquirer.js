@@ -31,15 +31,6 @@ const runProgram = () => {
     },
   ];
 
-  const postActionMenu = [
-    {
-      type: "list",
-      name: "postAction",
-      message: "Please select one of below options",
-      choices: ["Return to Menu", "Exit"],
-    },
-  ];
-
   const addDepartment = [
     {
       type: "input",
@@ -91,6 +82,14 @@ const runProgram = () => {
   ];
 
   const postMenuSelect = () => {
+    const postActionMenu = [
+      {
+        type: "list",
+        name: "postAction",
+        message: "Please select one of below options",
+        choices: ["Return to Menu", "Exit"],
+      },
+    ];
     inquirer.prompt(postActionMenu).then((response) => {
       if (response.postAction === "Return to Menu") {
         mainMenu();
@@ -231,9 +230,11 @@ const runProgram = () => {
       else if (response.menu === "view departments") {
         store.viewDepartmentsDB();
       }
+      //promise();
+
       //if view roles
       else if (response.menu === "view roles") {
-        //view roles
+        store.viewRolesDB();
         // postMenuSelect();
       }
       //if view employees
