@@ -122,13 +122,11 @@ class Store {
         },
       ];
       inquirer.prompt(selectRole).then((response) => {
-        console.log(response.selectRole);
         connection.query(
           "SELECT role_id FROM roles WHERE title = ?",
           [response.selectRole],
           (err, roleID) => {
             if (err) throw err;
-            console.log(roleID[0].role_id);
             connection.query(
               "SELECT first_name, last_name FROM employees WHERE role_id = ?",
               [roleID[0].role_id],
@@ -149,9 +147,15 @@ class Store {
       });
     });
   }
-  //TODO view employees
+
   viewEmployeesDB() {
-    connection.query("SELECT first_name, last_name FROM ");
+    connection.query(
+      "SELECT employees.id, employees.first_name, employees.last_name, employees.role_id, employees.manager_id, roles.title, roles.salary, roles.department_id FROM employees LEFT JOIN roles ON employees.role_id = roles.role_id",
+      (err, employees) => {
+        if (err) throw err;
+        console.table(employees);
+      }
+    );
   }
 }
 

@@ -20,13 +20,12 @@ const runProgram = () => {
       name: "menu",
       message: "What action would you like to execute?",
       choices: [
-        "add department",
-        "add role",
-        "add employee",
-        "view departments",
-        "view roles",
-        "view employees",
-        "update employee rolls",
+        "Add Department",
+        "Add Role",
+        "Add Employee",
+        "View Employees by Department",
+        "View Employees by Role",
+        "View All Employees",
       ],
     },
   ];
@@ -215,37 +214,29 @@ const runProgram = () => {
     //TODO display new employee rolls at top
     inquirer.prompt(mainMenuSelect).then((response) => {
       //if add department
-      if (response.menu === "add department") {
+      if (response.menu === "Add Department") {
         addNewDepartment();
       }
       //if add role
-      else if (response.menu === "add role") {
+      else if (response.menu === "Add Role") {
         addNewRole();
       }
       //if add employee
-      else if (response.menu === "add employee") {
+      else if (response.menu === "Add Employee") {
         addNewEmployee();
       }
       //if view departments
-      else if (response.menu === "view departments") {
+      else if (response.menu === "View Employees by Department") {
         store.viewDepartmentsDB();
       }
-      //promise();
 
       //if view roles
-      else if (response.menu === "view roles") {
+      else if (response.menu === "View Employees by Role") {
         store.viewRolesDB();
-        // postMenuSelect();
       }
       //if view employees
-      else if (response.menu === "view employees") {
-        //viewEmployees
-        // postMenuSelect();
-      }
-      //if update employee roles
-      else if (response.menu === "update employee rolls") {
-        //update employee roles
-        // postMenuSelect();
+      else if (response.menu === "View All Employees") {
+        store.viewEmployeesDB();
       }
     });
   };
