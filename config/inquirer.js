@@ -6,7 +6,9 @@ const connection = require("./connection.js");
 
 const app = express();
 
+//export function to run on npm init
 const runProgram = () => {
+  //list options for main menu
   const mainMenuSelect = [
     {
       type: "list",
@@ -31,6 +33,8 @@ const runProgram = () => {
     },
   ];
 
+  //I set these up so that if you wanted to add a new employee to a new roll to a new department, you could
+  //easily pass through the inquirer with these "followUp" questions
   const addDeptFollowUp = [
     {
       type: "confirm",
@@ -52,6 +56,7 @@ const runProgram = () => {
     },
   ];
 
+  //
   const addRoleFollowUp = [
     {
       type: "confirm",
@@ -73,6 +78,7 @@ const runProgram = () => {
     },
   ];
 
+  //After you add an employee or role or dept, this will give you the option to return to main menu or exit
   const postMenuSelect = () => {
     const postActionMenu = [
       {
@@ -93,7 +99,9 @@ const runProgram = () => {
 
   const addNewDepartment = () => {
     inquirer.prompt(addDepartment).then((response) => {
+      //this function commits your response to the DB
       store.addDepartmentDB(response.newDept);
+      //Follow up question
       inquirer.prompt(addDeptFollowUp).then((response) => {
         if (response.deptFollowUp == true) {
           addNewRole();
@@ -107,14 +115,17 @@ const runProgram = () => {
   const addNewRole = () => {
     inquirer.prompt(addRole).then((response) => {
       const departmentArray = [];
+      //select the name of all departments
       connection.query("SELECT name FROM departments", (err, data) => {
         if (err) {
           console.log("this didn't work");
           throw err;
         }
+        //create an array of each name
         data.forEach((datus) => {
           departmentArray.push(datus.name);
         });
+        //prompt user to pick which department new roll falls under
         const roleSelect = [
           {
             type: "list",
@@ -124,12 +135,15 @@ const runProgram = () => {
           },
         ];
         inquirer.prompt(roleSelect).then((response2) => {
+          //find the ID of the department based on name provided
           connection.query(
             "SELECT id FROM departments WHERE name =?",
             [response2.departmentId],
             (err, data) => {
               if (err) throw err;
+              //add the new role to the DB
               store.addRoleDB(response.title, response.salary, data[0].id);
+              //follow up questions
               inquirer.prompt(addRoleFollowUp).then((response) => {
                 if (response.roleFollowUp == true) {
                   addNewEmployee();
@@ -146,10 +160,11 @@ const runProgram = () => {
 
   const addNewEmployee = () => {
     inquirer.prompt(addEmployee).then((response) => {
-      //get list of roles
       const rolesList = [];
+      //get all roles
       connection.query("SELECT title FROM roles", (err, roles) => {
         if (err) throw err;
+        //create an array of all rolls and prompt user to select
         roles.forEach((role) => {
           rolesList.push(role.title);
         });
@@ -162,6 +177,7 @@ const runProgram = () => {
           },
         ];
         inquirer.prompt(rolesInquire).then((roleID) => {
+          //get role_id for selected role
           connection.query(
             "SELECT role_id FROM roles WHERE title =?",
             [roleID.selectRole],

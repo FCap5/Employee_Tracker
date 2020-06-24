@@ -148,22 +148,15 @@ class Store {
     });
   }
 
-  viewEmployeesDB() {
-    return new Promise((resolve, reject) => {
-      connection.query(
-        "SELECT employees.id, employees.first_name, employees.last_name, employees.role_id, employees.manager_id, roles.title, roles.salary, roles.department_id FROM employees LEFT JOIN roles ON employees.role_id = roles.role_id",
-        (err, employees) => {
-          if (err) throw err;
-          console.table(employees);
-        }
-      );
-      const err = false;
-      if (!err) {
-        resolve();
-      } else {
-        reject("something went wrong");
+  viewEmployeesDB(callback) {
+    connection.query(
+      "SELECT employees.id, employees.first_name, employees.last_name, employees.role_id, employees.manager_id, roles.title, roles.salary, roles.department_id FROM employees LEFT JOIN roles ON employees.role_id = roles.role_id",
+      (err, employees) => {
+        if (err) throw err;
+        console.table(employees);
+        callback();
       }
-    });
+    );
   }
 }
 
