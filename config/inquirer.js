@@ -183,16 +183,19 @@ const runProgram = () => {
             [roleID.selectRole],
             (err, newRoleId) => {
               if (err) throw err;
+              //get id, first name, last name from employees
               connection.query(
                 "SELECT id, first_name, last_name FROM employees",
                 (err, employees) => {
                   if (err) throw err;
+                  //create an array of employees for user to select via prompt
                   const fullNames = [];
                   employees.forEach((employee) => {
                     const employeeName = `${employee.id}, ${employee.last_name}, ${employee.first_name}`;
 
                     fullNames.push(employeeName);
                   });
+                  //have user select employee name from prompt and set that as manager
                   const managers = [
                     {
                       type: "list",
@@ -201,6 +204,7 @@ const runProgram = () => {
                       choices: fullNames,
                     },
                   ];
+                  //store firstName, lastName, roleId, and manager
                   inquirer.prompt(managers).then((managerName) => {
                     store.addEmployeeDB(
                       response.firstName,

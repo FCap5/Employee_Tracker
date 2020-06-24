@@ -4,7 +4,7 @@ const inquirer = require("inquirer");
 const cTable = require("console.table");
 
 class Store {
-  //add department to list
+  //add department to DB
   addDepartmentDB(value) {
     connection.query(
       "INSERT INTO departments (name) VALUES  (?)",
@@ -18,7 +18,8 @@ class Store {
     );
     console.log(`The ${value} department has been added to your company.`);
   }
-  //take response and add to departments table
+
+  //take response and add to roles table
   addRoleDB(title, salary, departmentID) {
     connection.query(
       "INSERT INTO roles (title, salary, department_id) VALUES  (?, ?, ?)",
@@ -33,6 +34,7 @@ class Store {
     console.log(`The ${title} role has been added to your company.`);
   }
 
+  //take response and add employee into employees table
   addEmployeeDB(firstName, lastName, roleId, managerId) {
     connection.query(
       "INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES  (?, ?, ?, ?)",
@@ -47,8 +49,11 @@ class Store {
     console.log(`${firstName} ${lastName} has been added to your company.`);
   }
 
+  //for function to view employees by department
+  //prompt list of departments -> select department -> show all employees in that department -> return to main menu
   viewDepartmentsDB(callback) {
     const array = [];
+    //select all department names
     connection.query("SELECT name FROM departments", (err, values) => {
       if (err) throw err;
       values.forEach((value) => {
@@ -61,12 +66,13 @@ class Store {
           choices: array,
         })
         .then((response) => {
+          //get department id
           connection.query(
             "SELECT id FROM departments WHERE name =?",
             [response.departSelect],
             (err, data) => {
               if (err) throw err;
-
+              //get the corresponding role IDs
               connection.query(
                 "SELECT role_id FROM roles WHERE department_id =?",
                 [data[0].id],
@@ -76,6 +82,8 @@ class Store {
                   const queryString = "OR id = (?)";
                   const searchParameters = [];
 
+                  //use the length of the array of ids to build query string
+                  //and create query parameters from ids
                   data.forEach((datus) => {
                     const i = data.indexOf(datus);
                     searchParameters.push([data[i].role_id]);
@@ -87,12 +95,14 @@ class Store {
                   const revisedSearchQuery = searchQuery
                     .join(",")
                     .replace(/,/g, " ");
+                  //serach for all the employees who have a role_id that corresponds to department id selected earlier
                   connection.query(
                     `SELECT first_name, last_name, id FROM employees WHERE ${revisedSearchQuery}`,
                     searchParameters,
                     (err, employees) => {
                       if (err) throw err;
                       console.table(employees);
+                      //callback function to return to main menu
                       callback();
                     }
                   );
@@ -105,7 +115,9 @@ class Store {
     });
   }
 
+  //to view roles from
   viewRolesDB(callback) {
+    //get all titles
     connection.query("SELECT title FROM roles", (err, roles) => {
       if (err) throw err;
       const allRoles = [];
@@ -120,6 +132,7 @@ class Store {
           choices: allRoles,
         },
       ];
+      //get role id
       inquirer.prompt(selectRole).then((response) => {
         connection.query(
           "SELECT role_id FROM roles WHERE title = ?",
@@ -127,6 +140,9 @@ class Store {
           (err, roleID) => {
             if (err) throw err;
             connection.query(
+              //find employees by role_id
+              //add to array
+              //console.table it
               "SELECT first_name, last_name FROM employees WHERE role_id = ?",
               [roleID[0].role_id],
               (err, employeesByRole) => {
@@ -148,6 +164,7 @@ class Store {
     });
   }
 
+  //select all employees and display
   viewEmployeesDB(callback) {
     connection.query(
       "SELECT employees.id, employees.first_name, employees.last_name, employees.role_id, employees.manager_id, roles.title, roles.salary, roles.department_id FROM employees LEFT JOIN roles ON employees.role_id = roles.role_id",
