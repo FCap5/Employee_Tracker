@@ -219,18 +219,16 @@ const runProgram = () => {
       }
       //if view departments
       else if (response.menu === "View Employees by Department") {
-        store.viewDepartmentsDB();
-        setTimeout(mainMenu, 3000);
+        //store.viewDepartmentsDB();
+        store.viewDepartmentsDB(mainMenu);
       }
       //if view roles
       else if (response.menu === "View Employees by Role") {
-        store.viewRolesDB();
-        setTimeout(mainMenu, 3000);
+        store.viewRolesDB(mainMenu);
       }
       //if view employees
       else if (response.menu === "View All Employees") {
-        store.viewEmployeesDB();
-        setTimeout(mainMenu, 3000);
+        store.viewEmployeesDB(mainMenu);
       }
     });
   };

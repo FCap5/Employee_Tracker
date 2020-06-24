@@ -47,7 +47,7 @@ class Store {
     console.log(`${firstName} ${lastName} has been added to your company.`);
   }
 
-  viewDepartmentsDB() {
+  viewDepartmentsDB(callback) {
     const array = [];
     connection.query("SELECT name FROM departments", (err, values) => {
       if (err) throw err;
@@ -93,6 +93,7 @@ class Store {
                     (err, employees) => {
                       if (err) throw err;
                       console.table(employees);
+                      callback();
                     }
                   );
                 }
@@ -104,7 +105,7 @@ class Store {
     });
   }
 
-  viewRolesDB() {
+  viewRolesDB(callback) {
     connection.query("SELECT title FROM roles", (err, roles) => {
       if (err) throw err;
       const allRoles = [];
@@ -138,6 +139,7 @@ class Store {
                   ]);
                 });
                 console.table(["First Name", "Last Name"], employeeName);
+                callback();
               }
             );
           }
@@ -146,12 +148,13 @@ class Store {
     });
   }
 
-  viewEmployeesDB() {
+  viewEmployeesDB(callback) {
     connection.query(
       "SELECT employees.id, employees.first_name, employees.last_name, employees.role_id, employees.manager_id, roles.title, roles.salary, roles.department_id FROM employees LEFT JOIN roles ON employees.role_id = roles.role_id",
       (err, employees) => {
         if (err) throw err;
         console.table(employees);
+        callback();
       }
     );
   }
