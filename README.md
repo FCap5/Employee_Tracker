@@ -25,18 +25,16 @@ I can say that I am officially over inquirer. It is a nifty tool, but it is gett
       }
       //if view departments
       else if (response.menu === "View Employees by Department") {
-        store.viewDepartmentsDB();
-        setTimeout(mainMenu, 4000);
+        //store.viewDepartmentsDB();
+        store.viewDepartmentsDB(mainMenu);
       }
       //if view roles
       else if (response.menu === "View Employees by Role") {
-        store.viewRolesDB();
-        setTimeout(mainMenu, 4000);
+        store.viewRolesDB(mainMenu);
       }
       //if view employees
       else if (response.menu === "View All Employees") {
-        store.viewEmployeesDB();
-        setTimeout(mainMenu, 4000);
+        store.viewEmployeesDB(mainMenu);
       }
     });
   };
