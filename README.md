@@ -52,9 +52,7 @@ This was another one of those instances where the assignment was a bit difficult
 
 ## STILL WORKING ON IT
 
-I'm still struggling to grasp ASYNC functions, callbacks, and promises. I understand where I run afowl, but need to find cleaner solutions. For example, in my series of if-statements, I used a timeout function to workaround the async nature of the functions I am calling. Basically, I picked an interval that I knew would allow the user to complete the first inquirer questions from the first function, before displaying the next inquirer question. It's a bit crude, but it works. I spent a lot of time trying to figure out how to promsify this series of functions, but couldn't quite get it.
-
-I also need to figure out how to clean up the issue I had with my Class. If I'm going to use a Class, I'd like to get all relevant functions into that class.
+I need to figure out how to clean up the issue I had with my Class. If I'm going to use a Class, I'd like to get all relevant functions into that class.
 
 This homework didn't ask for data validation. If I had more time, I probably would add datavalidation for the inquirer resonses to ensure that there were no blanks, integers when required, strings when required, and that there were no duplicate answers provided.
 
