@@ -6,7 +6,7 @@ The first challenge for this exercise was understanding the full scope of data I
 
 ## SETTING UP INQUIRER
 
-I can say that I am officially over inquirer. It is a nifty tool, but it is getting annoying. I set up my inquirer so that the actual functionality of the app would be as simple as possible. After creating my inquirer objects and functions to execute the appropriate calls, I set everything into a series of if/else ifs. The whole app is basically run with this code:
+I set up my inquirer so that the actual functionality of the app would be as simple as possible. After creating my inquirer objects and functions to execute the appropriate calls, I set everything into a series of if/else ifs. The whole app is basically run with this code:
 
 ```
   const mainMenu = () => {
