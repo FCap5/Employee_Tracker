@@ -44,11 +44,7 @@ I can say that I am officially over inquirer. It is a nifty tool, but it is gett
 
 I decided to use a Class to help organize my functions into two categories, user prompting and database storage/recall. The Class "store" organized all my functions that added or recalled information from my databases. It almost organized the app into front end and backend, with the terminal being the front end. It took a little bit to wrap my head around, but ulimtately, I think it helped to organize the app.
 
-## ANOTHER WEIRDLY WRITTEN ASSIGNMENT
-
-This was another one of those instances where the assignment was a bit difficult to understand. For example, one of the requirements was to be able to "update employee rolls." It was listed as if it should be an option to select in inquirer, but it wasn't explained any further. It is also not among the options in the demo provided. I decided that this just meant that if I were to add a department, role, or employee, when I then selected one of the view employee options, those udpates would be reflected.
-
-## STILL WORKING ON IT
+## DO YOU VALIDATE?
 
 This homework didn't ask for data validation. If I had more time, I probably would add datavalidation for the inquirer resonses to ensure that there were no blanks, integers when required, strings when required, and that there were no duplicate answers provided.
 
