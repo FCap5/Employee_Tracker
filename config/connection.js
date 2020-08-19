@@ -1,4 +1,4 @@
-var mysql = require("mysql");
+var mysql = require('mysql');
 
 const connection = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -8,13 +8,12 @@ const connection = mysql.createConnection({
   database: process.env.DB_NAME,
 });
 
-// Make connection.
 connection.connect(function (err) {
   if (err) {
-    console.error("error connecting: " + err.stack);
+    console.error('error connecting: ' + err.stack);
     return;
   }
-  console.log("connected as id " + connection.threadId);
+  console.log('connected as id ' + connection.threadId);
 });
 
 module.exports = connection;
